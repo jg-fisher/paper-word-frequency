@@ -1,4 +1,5 @@
 import os
+import sys
 import textract
 import enchant
 import pickle
@@ -17,27 +18,33 @@ class Analyze:
                         'has', 'their', 'will', 'when']
 
     def main(self, path='.'):
-        for f in os.listdir(path):
-            if f.endswith('.pdf'):
 
-                # extract text
-                print('Extracting {} ...'.format(f))
-                text = textract.process(f)
+        files = [f for f in os.listdir(path) if f.endswith('.pdf')]
+
+        if len(files) < 1:
+            print('No PDF in specified {} directory'.format(path))
+            return
+
+        for f in files:
+
+            # extract text
+            print('Extracting {} ...'.format(f))
+            text = textract.process(f)
         
-                # cleanup
-                text = text.replace('\n', ' ')
-                text = text.replace('.', '')
-                text = [i.lower() for i in text.split(' ')]
+            # cleanup
+            text = text.replace('\n', ' ')
+            text = text.replace('.', '')
+            text = [i.lower() for i in text.split(' ')]
 
-                # count
-                unique_words = sorted(set(text))
-                for word in unique_words:
-                    if len([l for l in word]) > 2 and word not in self.remove and not self._are_nums(word):
-                        try:
-                            if self.d.check(word):
-                                self.frequencies[word] = text.count(word)
-                        except:
-                            pass
+            # count
+            unique_words = sorted(set(text))
+            for word in unique_words:
+                if len([l for l in word]) > 2 and word not in self.remove and not self._are_nums(word):
+                    try:
+                        if self.d.check(word):
+                            self.frequencies[word] = text.count(word)
+                    except:
+                        pass
 
     def show(self, n_items=25):
         d_view = [ (v, k) for k, v in self.frequencies.iteritems() ]
