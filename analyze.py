@@ -4,6 +4,7 @@ import textract
 import enchant
 import pickle
 from operator import itemgetter
+import keyboard
 
 class Analyze:
     def __init__(self):
@@ -15,7 +16,10 @@ class Analyze:
                         'such', 'have', 'been', 'would',
                         'they', 'these', 'our', 'had',
                         'how', 'most', 'were', 'only',
-                        'has', 'their', 'will', 'when']
+                        'has', 'their', 'will', 'when',
+                        'using', 'use', 'used', 'more',
+                        'than', 'but', 'each', 'also',
+                        'where', 'was', 'all']
 
     def main(self, path='./'):
 
@@ -24,7 +28,7 @@ class Analyze:
         if len(files) < 1:
             print('No PDF in specified {} directory'.format(path))
             return
-
+        
         for f in files:
 
             # extract text
@@ -32,7 +36,7 @@ class Analyze:
             try:
                 text = textract.process(path + f)
             except:
-                print('Extracting: {} failed unexpectedly.'.format(f))
+                print('Extracting {} failed unexpectedly.'.format(f))
                 continue
         
             # cleanup
@@ -46,15 +50,21 @@ class Analyze:
                 if len([l for l in word]) > 2 and word not in self.remove and not self._are_nums(word):
                     try:
                         if self.d.check(word):
-                            self.frequencies[word] = text.count(word)
+                            if word in self.frequencies.keys():
+                                self.frequencies[word] = int(self.frequencies[word]) + int(text.count(word))
+                            else:
+                                self.frequencies[word] = int(text.count(word))
                     except:
-                        pass
+                        continue
+
+            self.show(n_items=25)
+
 
     def show(self, n_items=25):
         d_view = [ (v, k) for k, v in self.frequencies.iteritems() ]
         d_view.sort(reverse=True)
         for i, (v, k) in enumerate(d_view):
-            if i >= n_items:
+            if i == n_items:
                 break
             else:
                 print('{0}: {1}'.format(k, v))
