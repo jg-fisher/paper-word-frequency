@@ -4,7 +4,7 @@ import textract
 import enchant
 import pickle
 from operator import itemgetter
-import keyboard
+import matplotlib.pyplot as plt
 
 class Analyze:
     def __init__(self):
@@ -77,11 +77,27 @@ class Analyze:
         with open('frequencies.pkl', 'rb') as f:
             self.frequencies = pickle.load(f)
 
+    def visualize(self, n_words=25):
+        # add trimming based on n_words
+
+        n_words = range(n_words)
+        d_view = [ (v, k) for k, v in self.frequencies.iteritems() ]
+        d_view.sort(reverse=True)
+        f_view = { k:v for i, (v, k) in enumerate(d_view) if i in n_words }
+
+        plt.figure()
+        plt.title('ML Paper Word Frequencies')
+        plt.bar(range(len(f_view)), list(f_view.values()), align='center')
+        plt.xticks(range(len(f_view)), list(f_view.keys()), rotation=90)
+        plt.tight_layout()
+        plt.savefig('barchart')
+        plt.show()
+    
     def _are_nums(self, string):
         return any(i.isdigit() for i in string)
 
 if __name__ == '__main__':
     a = Analyze()
-    a.main(path='./papers/')
-    a.show(n_items=100)
-    a.save()
+    #a.main(path='./papers/')
+    a.load()
+    a.visualize()
