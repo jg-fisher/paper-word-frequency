@@ -17,7 +17,7 @@ class Analyze:
                         'how', 'most', 'were', 'only',
                         'has', 'their', 'will', 'when']
 
-    def main(self, path='.'):
+    def main(self, path='./'):
 
         files = [f for f in os.listdir(path) if f.endswith('.pdf')]
 
@@ -29,7 +29,7 @@ class Analyze:
 
             # extract text
             print('Extracting {} ...'.format(f))
-            text = textract.process(f)
+            text = textract.process(path + f)
         
             # cleanup
             text = text.replace('\n', ' ')
@@ -68,6 +68,6 @@ class Analyze:
 
 if __name__ == '__main__':
     a = Analyze()
-    a.main(path='.')
+    a.main(path='./papers/')
     a.show(n_items=100)
     a.save()
