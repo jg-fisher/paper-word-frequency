@@ -29,7 +29,11 @@ class Analyze:
 
             # extract text
             print('Extracting {} ...'.format(f))
-            text = textract.process(path + f)
+            try:
+                text = textract.process(path + f)
+            except:
+                print('Extracting: {} failed unexpectedly.'.format(f))
+                continue
         
             # cleanup
             text = text.replace('\n', ' ')

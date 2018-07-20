@@ -27,18 +27,17 @@ class Download:
 
         base_url = 'https://arxiv.org/pdf/'
         for link in self.pdf_links:
-            print('Downloading: {}\r'.format(link))
+            print('Downloading: {}'.format(link))
             paper = {'pdf_url': base_url + link,
                      'title': link.split('.pdf')[0]}
-            arxiv.download(paper)
+            try:
+                arxiv.download(paper)
+            except:
+                print('Download: {} failed unexpectedly.'.format(link))
+                pass
 
 if __name__ == '__main__':
     dl = Download()
     dl.get()
     dl.extract()
     dl.download()
-
-    #paper = {'pdf_url': 'https://arxiv.org/pdf/1807.07049v1.pdf',
-    #        'title': 'Paper'}
-    #arxiv.download(paper)
-        
