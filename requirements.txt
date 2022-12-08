@@ -2,7 +2,7 @@ argcomplete==1.8.2
 arxiv==0.2.3
 backports.functools-lru-cache==1.5
 beautifulsoup4==4.5.3
-certifi==2018.4.16
+certifi==2022.12.7
 chardet==3.0.4
 cycler==0.10.0
 docx2txt==0.6
